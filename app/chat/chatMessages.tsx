@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { ChatMessage, useChat } from "./chatHandler";
 import { parseChatMessage } from "@twurple/common";
 import { BasicParsedMessagePart } from '@twurple/common/lib/emotes/ParsedMessagePart'
-import { formatUserBadges, formatGlobalBadges, fetchUserPronouns, formatPronouns } from "./externalData";
+import { formatUserBadges, formatGlobalBadges, formatPronouns } from "./externalData";
 import Image from "next/image";
-import { useColorCorrection } from "./colorCorrection";
+import { ColorCorrection } from "./colorCorrection";
 
 function formatMessage(message: string, emoteOffsets: Map<string, string[]>): JSX.Element[] {
 
@@ -22,7 +22,7 @@ const emoteUrl = (id: string) => {
         result.push(part.text)
       } break
       case 'emote': {
-        result.push(<Image src={emoteUrl(part.id)} alt={part.name} width={25} height={25} style={{display: 'inline-block', width: 'auto', height:'auto'}}/>)
+        result.push(<Image src={emoteUrl(part.id)} alt={part.name} width={25} height={25} style={{display: 'inline-block', width: 'auto', height:'1.5rem'}}/>)
       } break
       default: {
         result.push(part.message)
@@ -62,8 +62,8 @@ export function ShowMessages() {
         if (formattedPronouns) {return (
         <span 
           className="bg-green mx-0.5 px-1.5 rounded-lg outline outline-1 outline-white text-right">
-            {formattedPronouns}
-            </span>
+          {formattedPronouns}
+        </span>
         )}
       })
         return (
@@ -72,12 +72,12 @@ export function ShowMessages() {
             `${isBold()? 'bg-bold italic' : 'bg-default'} 
             text-white my-2 mx-3 rounded-md p-1 outline outline-1 outline-black drop-shadow-md`
           }
-          style={msg.isAction? {color: useColorCorrection(msg.userColor ?? '')} : {color: ''}}
+          style={msg.isAction? {color: ColorCorrection(msg.userColor ?? '')} : {color: ''}}
           >
             <span className="drop-shadow-none">
             <span className="align-middle">{badgeElements}</span> 
             {pronouns}
-            <span className="font-bold" style={{color: `${useColorCorrection(msg.userColor ?? '')}`}}>{msg.username}:</span> 
+            <span className="font-bold" style={{color: `${ColorCorrection(msg.userColor ?? '')}`}}>{msg.username}:</span> 
             {msg.isSub? (msg.subLength !== undefined && msg.subLength>1)? 
             `just resubscribed! for ${msg.subLength} months` : 
             'just subscribed!' : 
