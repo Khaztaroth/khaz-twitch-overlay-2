@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-import { ChatAnnouncementInfo, ChatSubInfo, PrivateMessage, UserNotice } from '@twurple/chat'
+import { ChatAnnouncementInfo, ChatSubInfo, ClearChat, ClearMsg, PrivateMessage, UserNotice } from '@twurple/chat'
 import { chatConnection } from "./chatConnection";
 
 export interface ChatMessage {
@@ -8,9 +8,12 @@ export interface ChatMessage {
     userId: string,
     userColor: string | undefined,
     userBadges: Map<string, string>,
+
     message: string,
+    id: string,
     emotes: Map<string, string[]>,
     subLength: number | undefined,
+
     isSub: Boolean,
     isAction: Boolean,
     isAnnouncement: Boolean,
@@ -31,6 +34,7 @@ export function useChat() {
             userBadges: msg.userInfo.badges,
 
             message: messageContent,
+            id: msg.id,
             emotes: msg.emoteOffsets,
 
             subLength: undefined,
@@ -40,12 +44,9 @@ export function useChat() {
             isAnnouncement: false
         }
 
-        if(!messageRef.current.includes(msg.id)) {
-            messageRef.current.push(msg.id)
-            setMessages((prevMessage) => {
-                return [...prevMessage.slice(-20), message]
-            });
-        }
+        setMessages((prevMessage) => {
+            return [...prevMessage.slice(-20), message]
+        })
     }
     function announcementHandler(channel: string, user: string, announcementContent: ChatAnnouncementInfo, msg: UserNotice) {
 
@@ -56,6 +57,7 @@ export function useChat() {
             userBadges: msg.userInfo.badges,
 
             message: msg.message.value,
+            id: msg.id,
             emotes: msg.emoteOffsets,
 
             subLength: undefined,
@@ -65,13 +67,10 @@ export function useChat() {
             isAnnouncement: true
         }
 
-        if(!messageRef.current.includes(msg.id)) {
-            messageRef.current.push(msg.id)
             setMessages((prevMessage) => {
                 return [...prevMessage.slice(-20), message]
             });
         }
-    }
 
     function subscriptionHandler(channel: string, user: string, subContent: ChatSubInfo, msg: UserNotice) {
 
@@ -82,6 +81,7 @@ export function useChat() {
             userBadges: msg.userInfo.badges,
 
             message: subContent.message || '',
+            id: msg.id,
             emotes: msg.emoteOffsets,
 
             subLength: subContent.months,
@@ -90,12 +90,25 @@ export function useChat() {
             isAction: false,
             isAnnouncement: false,
         }
-        if(!messageRef.current.includes(msg.id)) {
-            messageRef.current.push(msg.id)
             setMessages((prevMessage) => {
                 return [...prevMessage.slice(-20), message]
             });
         }
+    
+    function messageRemoveHandler(messageId: string) {
+        setMessages((prevMessages) => {
+            return prevMessages.filter((msg) => {
+              return msg.id !== messageId;
+            });
+        });
+    }
+
+    function userRemoveHandler(msg: ClearChat) {
+        setMessages((prevMessages) => {
+            return prevMessages.filter((usr) => {
+                return usr.userId !== msg.targetUserId
+            })
+        })
     }
 
     useEffect(() => {
@@ -104,6 +117,10 @@ export function useChat() {
         chatConnection.onAnnouncement((channel, user, announcementInfo, msg) => announcementHandler(channel, user, announcementInfo, msg));
         chatConnection.onSub((channel, user, subInfo, msg) => subscriptionHandler(channel, user, subInfo, msg));
         chatConnection.onResub((channel, user, subInfo, msg) => subscriptionHandler(channel, user, subInfo, msg));
+        chatConnection.onChatClear((channel, msg) => {setMessages(() => {return []})})
+        chatConnection.onMessageRemove((channel, messageId, msg) => messageRemoveHandler(messageId))
+        chatConnection.onTimeout((channel, user, duration, msg) => userRemoveHandler(msg))
+        chatConnection.onBan((channel, user, msg) => userRemoveHandler(msg))
     },[])
 
     return messages

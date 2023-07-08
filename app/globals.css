@@ -15,3 +15,11 @@
     --background-end-rgb: 0, 0, 0, 0;
   }
 }
+@layer base {
+  .font-outline-2 {
+    -webkit-text-stroke: 1px black;
+  }
+  .font-outline-4 {
+    -webkit-text-stroke: px black;
+  }
+}
