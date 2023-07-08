@@ -1,8 +1,16 @@
-import { useEffect, useState } from "react"
-import { fetchUserId } from "./chatConnection"
+import { api, channel } from "./chatConnection"
+import NodeCache from "node-cache"
+
+const cache = new NodeCache({stdTTL: 3600})
+
+const getUserId = async (channel: string) => {
+    const id = await api.users.getUserByName(channel)
+    cache.set(channel, id?.id)
+    return cache.get(channel)
+}
 
 export async function getGlobalBadges() {
-    const res = await fetch('https://api.fossabot.com/v2/cached/twitch/badges/global', {next: {revalidate: 60*60}})
+    const res = await fetch('https://api.fossabot.com/v2/cached/twitch/badges/global', {next: {revalidate: 3600}})
     if (!res.ok) {
         throw new Error('Failed to fetch data')
     }
@@ -11,9 +19,31 @@ export async function getGlobalBadges() {
 }
 
 export async function getUserBadges() {
-    const channelID = await fetchUserId()
+    const getID = async (channel: string) => {
+        if (cache.get(channel) !== undefined) {
+           const channelID: string | undefined = cache.get(channel)
+           return channelID
+        } else {
+            const channelID: string | {} = await getUserId(channel) || {}
+            cache.set(channel, channelID)
+            return channelID
+        }
+    }
+    const createBadgesURL = (id: string | {} | undefined) => {
+        if (cache.get('badges_url') !== undefined) {
+            const URL: string = cache.get('badges_url') || ''
+            return URL
+        } else {
+            const URL = `https://api.fossabot.com/v2/cached/twitch/badges/users/${id}`
+            cache.set('channel_badges_url', URL)
+            return URL
+        }
+    }
 
-    const res = await fetch(`https://api.fossabot.com/v2/cached/twitch/badges/users/${channelID}`, {next: {revalidate: 60*60}})
+    const id: string | undefined | {} = await getID(channel)
+    const URL: string = createBadgesURL(id)
+
+    const res = await fetch(URL, {next: {revalidate: 3600}})
     if (!res.ok) {
         throw new Error('Failed to fetch data')
     }
@@ -63,13 +93,19 @@ export async function fetchUserPronouns (user: string): Promise<Pronouns> {
     const URL = `https://pronouns.alejo.io/api/users/${encodeURIComponent(user)}`;
 
     var pronouns: Pronouns = <Pronouns>{};
+    var cachedPronouns: Pronouns | undefined = cache.get(`${user}-pronouns`)
 
-    const res = await fetch(URL, {cache: "no-store"})
-        if (!res.ok) {
-            throw new Error(`can't fetch pronouns`)
-        }
-    const data: PronounData = res.json()
-    pronouns = (await data)[0];
+    if (cachedPronouns !== undefined) {
+        pronouns = cachedPronouns
+    } else {
+        const res = await fetch(URL, {cache: "no-store"})
+            if (!res.ok) {
+                throw new Error(`can't fetch pronouns`)
+            }
+        const data: PronounData = res.json()
+        pronouns = (await data)[0];
+        cache.set(`${user}-pronouns`, (await data)[0])
+    }
     
     return pronouns
 }

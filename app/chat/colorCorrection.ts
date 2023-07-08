@@ -1,4 +1,4 @@
-export function useColorCorrection (color: string) {
+export function ColorCorrection (color: string) {
     const convert = require('color-convert')
     let ogColor = color;
 
