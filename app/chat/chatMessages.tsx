@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ChatMessage, useChat } from "./chatHandler";
 import { parseChatMessage } from "@twurple/common";
 import { BasicParsedMessagePart } from '@twurple/common/lib/emotes/ParsedMessagePart'
@@ -51,7 +51,7 @@ export function ShowMessages() {
   const messages: Array<ChatMessage> = useChat();
   const [formattedMessages, setFormattedMessages] = useState<JSX.Element[]>([]);
 
-  useEffect(() => {
+useEffect(() => {
 
     const formatted = messages.map((msg, index) => {
       const isBold = () => {if (msg.isAction || msg.isAnnouncement || msg.isSub) {return true} else return false}
@@ -69,21 +69,22 @@ export function ShowMessages() {
         return (
           <div key={index} 
           className={
-            `${isBold()? 'bg-bold italic' : 'bg-default'} 
+            `${isBold()? 'bg-bold italic' : 'bg-default'}
             text-white my-2 mx-3 rounded-md p-1 outline outline-1 outline-black drop-shadow-md`
           }
-          style={msg.isAction? {color: ColorCorrection(msg.userColor ?? '')} : {color: ''}}
+          style={msg.isAction? {color: ColorCorrection(msg.userColor ?? '', msg.username)} : {color: ''}}
           >
             <span className="drop-shadow-none">
             <span className="align-middle">{badgeElements}</span> 
             {pronouns}
-            <span className="font-bold" style={{color: `${ColorCorrection(msg.userColor ?? '')}`}}>{msg.username}:</span> 
-            {msg.isSub? (msg.subLength !== undefined && msg.subLength>1)? 
-            `just resubscribed! for ${msg.subLength} months` : 
-            'just subscribed!' : 
+            <span className="font-bold text-xl" style={{color: `${ColorCorrection(msg.userColor ?? '', msg.username)}`}}>{msg.username}:</span> 
+            {msg.isGift? `Thanks ${msg.username} for the ${(msg.subLength !== undefined && msg.subLength>1)? `${msg.subLength} gifted subs` : 'gifted sub'}`: 
+            msg.isSub? (msg.subLength !== undefined && msg.subLength>1)? 
+            ` just resubscribed! for ${msg.subLength} months` : 
+            ' just subscribed!' : 
             ''}
             </span>
-            <div className="block drop-shadow-none">{formatMessage(msg.message, msg.emotes)}</div>
+            <div className="block drop-shadow-none text-2xl" id="message">{formatMessage(msg.message, msg.emotes)}</div>
         </div>
         )
     });
@@ -91,5 +92,5 @@ export function ShowMessages() {
     setFormattedMessages(formatted);
   }, [messages]);
 
-  return formattedMessages.slice(-14);
+  return (formattedMessages.slice(-12))
 }

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-import { ChatAnnouncementInfo, ChatSubInfo, ClearChat, ClearMsg, PrivateMessage, UserNotice } from '@twurple/chat'
+import { ChatAnnouncementInfo, ChatCommunitySubInfo, ChatSubGiftInfo, ChatSubInfo, ClearChat, ClearMsg, PrivateMessage, UserNotice } from '@twurple/chat'
 import { chatConnection } from "./chatConnection";
 
 export interface ChatMessage {
@@ -15,6 +15,7 @@ export interface ChatMessage {
     subLength: number | undefined,
 
     isSub: Boolean,
+    isGift: Boolean,
     isAction: Boolean,
     isAnnouncement: Boolean,
 }
@@ -40,6 +41,7 @@ export function useChat() {
             subLength: undefined,
 
             isSub: false,
+            isGift: false,
             isAction: isAction,
             isAnnouncement: false
         }
@@ -63,6 +65,7 @@ export function useChat() {
             subLength: undefined,
 
             isSub: false,
+            isGift: false,
             isAction: false,
             isAnnouncement: true
         }
@@ -72,8 +75,7 @@ export function useChat() {
             });
         }
 
-    function subscriptionHandler(channel: string, user: string, subContent: ChatSubInfo, msg: UserNotice) {
-
+    function subscriptionHandler(channel: string, user: string, subContent: ChatSubInfo, msg: UserNotice, type: string) {
         const message: ChatMessage = {
             username: msg.userInfo.displayName,
             userId: msg.userInfo.userId,
@@ -87,6 +89,30 @@ export function useChat() {
             subLength: subContent.months,
 
             isSub: true,
+            isGift: false,
+            isAction: false,
+            isAnnouncement: false,
+        }
+            setMessages((prevMessage) => {
+                return [...prevMessage.slice(-20), message]
+            });
+        }
+    
+    function giftSubscriptionHandler(channel: string, user: string, subContent: ChatSubGiftInfo | ChatCommunitySubInfo, msg: UserNotice, type: string) {
+        const message: ChatMessage = {
+            username: msg.userInfo.displayName,
+            userId: msg.userInfo.userId,
+            userColor: msg.userInfo.color,
+            userBadges: msg.userInfo.badges,
+
+            message: '',
+            id: msg.id,
+            emotes: msg.emoteOffsets,
+
+            subLength: subContent.gifterGiftCount,
+
+            isSub: false,
+            isGift: true,
             isAction: false,
             isAnnouncement: false,
         }
@@ -115,8 +141,9 @@ export function useChat() {
         chatConnection.onMessage((channel, user, text, msg) => messageHandler(channel, user, text, msg, 'message'));
         chatConnection.onAction((channel, user, text, msg) => messageHandler(channel, user, text, msg, 'action'));
         chatConnection.onAnnouncement((channel, user, announcementInfo, msg) => announcementHandler(channel, user, announcementInfo, msg));
-        chatConnection.onSub((channel, user, subInfo, msg) => subscriptionHandler(channel, user, subInfo, msg));
-        chatConnection.onResub((channel, user, subInfo, msg) => subscriptionHandler(channel, user, subInfo, msg));
+        chatConnection.onSub((channel, user, subInfo, msg) => subscriptionHandler(channel, user, subInfo, msg, 'sub'));
+        chatConnection.onResub((channel, user, subInfo, msg) => subscriptionHandler(channel, user, subInfo, msg, 'sub'));
+        chatConnection.onCommunitySub((channel, user, subInfo, msg) => giftSubscriptionHandler(channel, user, subInfo, msg, 'gitSub'));
         chatConnection.onChatClear((channel, msg) => {setMessages(() => {return []})})
         chatConnection.onMessageRemove((channel, messageId, msg) => messageRemoveHandler(messageId))
         chatConnection.onTimeout((channel, user, duration, msg) => userRemoveHandler(msg))

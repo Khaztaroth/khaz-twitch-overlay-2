@@ -15,6 +15,12 @@ module.exports = {
         'black': 'rgba(10, 10, 10, 1)'
       }
     },
+    keyframes: {
+      'scroll': {
+        '0%': {transform: 'translateY(-50px)'},
+        '100%': {transform: 'translateY(150px)'}
+      }
+    }
     
   },
   plugins: [],
