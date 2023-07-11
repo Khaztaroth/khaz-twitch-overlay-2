@@ -3,7 +3,6 @@ import { ChatMessage, useChat } from "./chatHandler";
 import { parseChatMessage } from "@twurple/common";
 import { BasicParsedMessagePart } from '@twurple/common/lib/emotes/ParsedMessagePart'
 import { formatUserBadges, formatGlobalBadges, formatPronouns } from "./externalData";
-import Image from "next/image";
 import { ColorCorrection } from "./colorCorrection";
 
 function formatMessage(message: string, emoteOffsets: Map<string, string[]>): JSX.Element[] {
@@ -22,7 +21,7 @@ const emoteUrl = (id: string) => {
         result.push(part.text)
       } break
       case 'emote': {
-        result.push(<Image src={emoteUrl(part.id)} alt={part.name} width={25} height={25} style={{display: 'inline-block', width: 'auto', height:'1.5rem'}}/>)
+        result.push(<img src={emoteUrl(part.id)} alt={part.name} style={{display: 'inline-block', width: 'auto', height:'1.5rem'}}/>)
       } break
       default: {
         result.push(part.message)
@@ -38,9 +37,9 @@ export async function FormatBadges(id: string, value: string): Promise<JSX.Eleme
   var badge: JSX.Element | undefined
 
   if (userBadges?.[id] !== undefined) {
-    badge = <Image src={ userBadges?.[id]?.[value]?.url} alt={userBadges?.[id]?.[value]?.alt} width={18} height={18} style={{marginRight:'0.25rem'}} />
+    badge = <img src={ userBadges?.[id]?.[value]?.url} alt={userBadges?.[id]?.[value]?.alt} style={{marginRight:'0.25rem', height: '1.2rem', width: 'auto'}} />
   } else if (globalBadges?.[id] !== undefined) {
-    badge = <Image src={ globalBadges?.[id]?.[value]?.url} alt={globalBadges?.[id]?.[value]?.alt} width={18} height={18} style={{marginRight:'0.25rem'}}/>
+    badge = <img src={ globalBadges?.[id]?.[value]?.url} alt={globalBadges?.[id]?.[value]?.alt} style={{marginRight:'0.25rem', height: '1.2rem', width: 'auto'}}/>
   } else badge = undefined
 
 
@@ -92,5 +91,5 @@ useEffect(() => {
     setFormattedMessages(formatted);
   }, [messages]);
 
-  return (formattedMessages.slice(-12))
+  return (formattedMessages.slice(-13))
 }
