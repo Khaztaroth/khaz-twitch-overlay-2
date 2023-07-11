@@ -17,11 +17,18 @@ module.exports = {
     },
     keyframes: {
       'scroll': {
-        '0%': {transform: 'translateY(-50px)'},
-        '100%': {transform: 'translateY(150px)'}
+        '0%': {transform: 'translateY(10px)', opacity: '0'},
+        '100%': {transform: 'translateY(0px)', opacity: '100'}
       }
-    }
-    
+    },
+    animation: {
+      fadeIn: 'scroll 0.3s ease-out'
+    },
+    content: [
+      './public/**/*.html',
+      './src/**/*.{js,jsx,ts,tsx,vue}',
+
+    ],
   },
   plugins: [],
 }

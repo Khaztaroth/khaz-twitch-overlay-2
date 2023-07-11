@@ -1,8 +1,8 @@
 import NodeCache from "node-cache";
 
 const cache = new NodeCache
-var convert = require('color-convert') // eslint-disable-line global-require //
-var randomColor = require('randomcolor') // eslint-disable-line global-require //
+var convert = require('color-convert');
+var randomColor = require('randomcolor');
 
 export function ColorCorrection (color: string, user: string) {
     const userColor = cache.get(user);
