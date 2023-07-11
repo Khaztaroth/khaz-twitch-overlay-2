@@ -50,6 +50,11 @@ export function ShowMessages() {
   const messages: Array<ChatMessage> = useChat();
   const [formattedMessages, setFormattedMessages] = useState<JSX.Element[]>([]);
 
+  const messageRef = useRef<HTMLDivElement>(null)
+  if (messageRef.current) {
+    messageRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' })
+  }
+
 useEffect(() => {
 
     const formatted = messages.map((msg, index) => {
@@ -84,6 +89,7 @@ useEffect(() => {
             ''}
             </span>
             <div className="block drop-shadow-none text-2xl" id="message">{formatMessage(msg.message, msg.emotes)}</div>
+            <div className="pt-1" ref={messageRef} />
         </div>
         )
     });
@@ -91,5 +97,6 @@ useEffect(() => {
     setFormattedMessages(formatted);
   }, [messages]);
 
-  return (formattedMessages.slice(-13))
+  return (formattedMessages.slice(-15))
+
 }
