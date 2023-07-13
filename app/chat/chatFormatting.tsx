@@ -97,6 +97,6 @@ useEffect(() => {
     setFormattedMessages(formatted);
   }, [messages]);
 
-  return (formattedMessages.slice(-15))
+  return formattedMessages.slice(-15)
 
 }
