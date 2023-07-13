@@ -6,7 +6,7 @@ chatConnection.connect()
 
 export default function Page() {
     return (
-      <div className="min-h-screen max-h-screen overscroll-y-contain">
+      <div className="min-h-screen max-h-screen">
         <ShowMessages/>
       </div>
     )
