@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ChatMessage, useChat } from "./chatHandler";
 import { parseChatMessage } from "@twurple/common";
 import { BasicParsedMessagePart } from '@twurple/common/lib/emotes/ParsedMessagePart'
@@ -50,11 +50,6 @@ export function ShowMessages() {
   const messages: Array<ChatMessage> = useChat();
   const [formattedMessages, setFormattedMessages] = useState<JSX.Element[]>([]);
 
-  const messageRef = useRef<HTMLDivElement>(null)
-  if (messageRef.current) {
-    messageRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' })
-  }
-
 useEffect(() => {
 
     const formatted = messages.map((msg, index) => {
@@ -74,7 +69,7 @@ useEffect(() => {
           <div key={index} 
           className={
             `${isBold()? 'bg-bold italic' : 'bg-default'}
-            text-white my-2 mx-3 rounded-md p-1 outline outline-1 outline-black drop-shadow-md`
+            text-white my-2 mx-3 rounded-md p-1 outline outline-1 outline-black drop-shadow-md h-full`
           }
           style={msg.isAction? {color: ColorCorrection(msg.userColor ?? '', msg.username)} : {color: ''}}
           >
@@ -89,7 +84,6 @@ useEffect(() => {
             ''}
             </span>
             <div className="block drop-shadow-none text-2xl" id="message">{formatMessage(msg.message, msg.emotes)}</div>
-            <div className="pt-1" ref={messageRef} />
         </div>
         )
     });
