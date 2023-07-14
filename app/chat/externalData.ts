@@ -1,7 +1,9 @@
 import { api, channel } from "./chatConnection"
 import NodeCache from "node-cache"
 
-const cache = new NodeCache({stdTTL: 3600})
+const timeToRevalidate = 3600*2
+const cache = new NodeCache({stdTTL: timeToRevalidate})
+
 
 const getUserId = async (channel: string) => {
     const id = await api.users.getUserByName(channel)
@@ -10,7 +12,7 @@ const getUserId = async (channel: string) => {
 }
 
 export async function getGlobalBadges() {
-    const res = await fetch('https://api.fossabot.com/v2/cached/twitch/badges/global', {next: {revalidate: 3600}})
+    const res = await fetch('https://api.fossabot.com/v2/cached/twitch/badges/global', {next: {revalidate: timeToRevalidate}})
     if (!res.ok) {
         throw new Error('Failed to fetch data')
     }
@@ -43,7 +45,7 @@ export async function getUserBadges() {
     const id: string | undefined | {} = await getID(channel)
     const URL: string = createBadgesURL(id)
 
-    const res = await fetch(URL, {next: {revalidate: 3600}})
+    const res = await fetch(URL, {next: {revalidate: timeToRevalidate}})
     if (!res.ok) {
         throw new Error('Failed to fetch data')
     }

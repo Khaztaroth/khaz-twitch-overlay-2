@@ -53,7 +53,7 @@ export function ShowMessages() {
 useEffect(() => {
 
     const formatted = messages.map((msg, index) => {
-      const isBold = () => {if (msg.isAction || msg.isAnnouncement || msg.isSub) {return true} else return false}
+      const isBold = () => {if (msg.isAction || msg.isAnnouncement || msg.isSub || msg.isGift) {return true} else return false}
       const badgeElements = Array.from(msg.userBadges.entries()).map(([key, value], index) => {
         return <span key={index} className="inline-block">{FormatBadges(key, value)}</span>;
       });
