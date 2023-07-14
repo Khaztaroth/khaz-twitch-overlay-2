@@ -36,7 +36,7 @@ return (
 )
 }
 
-export function Rectangles(props: Colors) {
+export function ArtRectangles(props: Colors) {
 
     const style = {
         stroke: 'url(#gradient)' || 'rgb(127,0,255)',
@@ -53,7 +53,7 @@ return (
     <defs>
         {GradientShift(props.colorstart, props.colorend)}
     </defs>
-    <path d="M0,0L0,1080L1920,1080L1920,0L0,0ZM320,0L320,1080M320,900L1920,900M320,760L0,760" style={style}/>
+    <path d="M0,0L0,1080L1920,1080L1920,0L0,0ZM320,0L320,1080M320,760L0,760" style={style}/>
     </svg>
 )
 }
