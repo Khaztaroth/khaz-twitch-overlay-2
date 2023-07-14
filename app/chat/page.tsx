@@ -9,7 +9,7 @@ export default function Page() {
   const messageRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     if (messageRef.current) {
-      messageRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' })
+      messageRef.current.scrollIntoView({ behavior: 'instant', block: 'nearest', inline: 'start' })
     }
   }, [ShowMessages()])
     return (

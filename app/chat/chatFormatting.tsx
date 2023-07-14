@@ -21,7 +21,7 @@ const emoteUrl = (id: string) => {
         result.push(part.text)
       } break
       case 'emote': {
-        result.push(<img src={emoteUrl(part.id)} alt={part.name} style={{display: 'inline-block', width: 'auto', height:'1.5rem'}}/>)
+        result.push(<img src={emoteUrl(part.id)} alt={part.name} className="inline-block w-auto h-6"/>)
       } break
       default: {
         result.push(part.message)
@@ -37,9 +37,9 @@ export async function FormatBadges(id: string, value: string): Promise<JSX.Eleme
   var badge: JSX.Element | undefined
 
   if (userBadges?.[id] !== undefined) {
-    badge = <img src={ userBadges?.[id]?.[value]?.url} alt={userBadges?.[id]?.[value]?.alt} style={{marginRight:'0.25rem', height: '1rem', width: 'auto'}} />
+    badge = <img src={ userBadges?.[id]?.[value]?.url} alt={userBadges?.[id]?.[value]?.alt} className="w-auto h-4 mr-1 md:h-6 md:mr-2" />
   } else if (globalBadges?.[id] !== undefined) {
-    badge = <img src={ globalBadges?.[id]?.[value]?.url} alt={globalBadges?.[id]?.[value]?.alt} style={{marginRight:'0.25rem', height: '1rem', width: 'auto'}}/>
+    badge = <img src={ globalBadges?.[id]?.[value]?.url} alt={globalBadges?.[id]?.[value]?.alt} className="w-auto h-4 mr-1 md:h-6 md:mr-2"/>
   } else badge = undefined
 
 
@@ -77,9 +77,9 @@ useEffect(() => {
             <span className="align-middle">{badgeElements}</span> 
             {pronouns}
             <span className="font-bold text-xm md:text-xl" style={{color: `${ColorCorrection(msg.userColor ?? '', msg.username)}`}}>{msg.username}:</span> 
-            {msg.isGift? `Thanks ${msg.username} for the ${(msg.subLength !== undefined && msg.subLength>1)? `${msg.subLength} gifted subs` : 'gifted sub'}`: 
+            {msg.isGift? `Thanks for the ${(msg.subLength !== undefined && msg.subLength>1)? `${msg.subLength} gifted subs` : 'gifted sub'}`: 
             msg.isSub? (msg.subLength !== undefined && msg.subLength>1)? 
-            ` just resubscribed! for ${msg.subLength} months` : 
+            ` just resubscribed for ${msg.subLength} months!` : 
             ' just subscribed!' : 
             ''}
             </span>
