@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { ChatAnnouncementInfo, ChatCommunitySubInfo, ChatSubGiftInfo, ChatSubInfo, ClearChat, ClearMsg, PrivateMessage, UserNotice } from '@twurple/chat'
 import { chatConnection } from "./chatConnection";
@@ -22,7 +22,6 @@ export interface ChatMessage {
 
 export function useChat() {
     const [messages, setMessages] = useState<ChatMessage[]>([]);
-    const messageRef = useRef<String[]>([]);
 
     function messageHandler(channel: string, user: string, messageContent: string, msg: PrivateMessage, type: string ) {
 
