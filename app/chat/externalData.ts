@@ -7,8 +7,7 @@ const cache = new NodeCache({stdTTL: timeToRevalidate})
 
 const getUserId = async (channel: string) => {
     const id = await api.users.getUserByName(channel)
-    cache.set(channel, id?.id)
-    return cache.get(channel)
+    return id?.id
 }
 
 export async function getGlobalBadges() {
@@ -21,29 +20,16 @@ export async function getGlobalBadges() {
 }
 
 export async function getUserBadges() {
-    const getID = async (channel: string) => {
-        if (cache.get(channel) !== undefined) {
-           const channelID: string | undefined = cache.get(channel)
-           return channelID
-        } else {
-            const channelID: string | {} = await getUserId(channel) || {}
-            cache.set(channel, channelID)
-            return channelID
-        }
-    }
-    const createBadgesURL = (id: string | {} | undefined) => {
-        if (cache.get('badges_url') !== undefined) {
-            const URL: string = cache.get('badges_url') || ''
-            return URL
-        } else {
-            const URL = `https://api.fossabot.com/v2/cached/twitch/badges/users/${id}`
-            cache.set('channel_badges_url', URL)
-            return URL
-        }
+    const getID = async (channel: string): Promise<string | undefined> => {
+            const channelID: string | undefined = await getUserId(channel)
+                if(typeof channelID !== undefined) {
+                    cache.set(channel, channelID)
+                    return channelID
+                }
     }
 
-    const id: string | undefined | {} = await getID(channel)
-    const URL: string = createBadgesURL(id)
+    const id: string | undefined = cache.get(channel) || await getID(channel)
+    const URL = `https://api.fossabot.com/v2/cached/twitch/badges/users/${id}`
 
     const res = await fetch(URL, {next: {revalidate: timeToRevalidate}})
     if (!res.ok) {
@@ -55,6 +41,7 @@ export async function getUserBadges() {
 
 type Badge = Record<string, {alt: string; url: string}>
 
+//code for badge object formatting taken from https://github.com/aidenwallis/twitch-chat-widget-2 I figure it out myself
 export async function formatUserBadges(): Promise<Record<string, Badge>> {
   const userBadgeData = await getUserBadges();
 
