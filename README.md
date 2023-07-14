@@ -7,6 +7,9 @@ Custom overlay and chat implementation for twitch channel khaztaroth315, written
 
 ## Usage
 
+#### Config
+You'll need a client ID and a client Secret from a Twitch Dev app in order to fetch user badges, set them up as an `.env` file with the properties `CLIENT_ID` and `CLIENT_SECRET`. Most packages in this application require NodeJS `18.16.1` or newer. 
+
 #### Chat:
 Chat defaults to "khaztaroth315" for the channel. It can be set by adding the header `?channel=CHANNEL_NAME` to the url
 
