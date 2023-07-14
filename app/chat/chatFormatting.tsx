@@ -37,9 +37,9 @@ export async function FormatBadges(id: string, value: string): Promise<JSX.Eleme
   var badge: JSX.Element | undefined
 
   if (userBadges?.[id] !== undefined) {
-    badge = <img src={ userBadges?.[id]?.[value]?.url} alt={userBadges?.[id]?.[value]?.alt} style={{marginRight:'0.25rem', height: '1.2rem', width: 'auto'}} />
+    badge = <img src={ userBadges?.[id]?.[value]?.url} alt={userBadges?.[id]?.[value]?.alt} style={{marginRight:'0.25rem', height: '1rem', width: 'auto'}} />
   } else if (globalBadges?.[id] !== undefined) {
-    badge = <img src={ globalBadges?.[id]?.[value]?.url} alt={globalBadges?.[id]?.[value]?.alt} style={{marginRight:'0.25rem', height: '1.2rem', width: 'auto'}}/>
+    badge = <img src={ globalBadges?.[id]?.[value]?.url} alt={globalBadges?.[id]?.[value]?.alt} style={{marginRight:'0.25rem', height: '1rem', width: 'auto'}}/>
   } else badge = undefined
 
 
@@ -60,7 +60,7 @@ useEffect(() => {
       const pronouns = formatPronouns(msg.username).then((formattedPronouns) => {
         if (formattedPronouns) {return (
         <span 
-          className="bg-green mx-0.5 px-1.5 rounded-lg outline outline-1 outline-white text-right">
+          className="bg-green mx-0.5 px-1.5 text-xs rounded-lg outline outline-1 outline-white text-right md:text-sm">
           {formattedPronouns}
         </span>
         )}
@@ -76,14 +76,14 @@ useEffect(() => {
             <span className="drop-shadow-none">
             <span className="align-middle">{badgeElements}</span> 
             {pronouns}
-            <span className="font-bold text-xl" style={{color: `${ColorCorrection(msg.userColor ?? '', msg.username)}`}}>{msg.username}:</span> 
+            <span className="font-bold text-xm md:text-xl" style={{color: `${ColorCorrection(msg.userColor ?? '', msg.username)}`}}>{msg.username}:</span> 
             {msg.isGift? `Thanks ${msg.username} for the ${(msg.subLength !== undefined && msg.subLength>1)? `${msg.subLength} gifted subs` : 'gifted sub'}`: 
             msg.isSub? (msg.subLength !== undefined && msg.subLength>1)? 
             ` just resubscribed! for ${msg.subLength} months` : 
             ' just subscribed!' : 
             ''}
             </span>
-            <div className="block drop-shadow-none text-2xl" id="message">{formatMessage(msg.message, msg.emotes)}</div>
+            <div className="block drop-shadow-none text-xl md:text-2xl" id="message">{formatMessage(msg.message, msg.emotes)}</div>
         </div>
         )
     });
