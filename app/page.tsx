@@ -8,8 +8,9 @@ export default function Home() {
     <div>
       <ul>
       <li><Link href="/chat">Chat page</Link></li>
-      <li><Link href="/overlay/gaming">Games Overlay</Link></li>
-      <li><Link href="/overlay/art">Art Overlay</Link></li>
+      <li><Link href="/scenes/gaming">Games Overlay</Link></li>
+      <li><Link href="/scenes/art">Art Overlay</Link></li>
+      <li><Link href="/scenes/custom">Custom Overlay</Link></li>
       </ul>
     </div>
   )
