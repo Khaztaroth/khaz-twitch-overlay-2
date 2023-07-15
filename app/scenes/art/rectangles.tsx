@@ -7,39 +7,27 @@ type Colors = {
 }
 
 function GradientShift(colorStart: string, colorEnd: string) {
-    const gradient1 = useSpring({
-            loop: {reverse: true},
-            from: {stopColor: colorStart || 'rgb(169, 91, 234)'},
-            to: {stopColor: colorEnd || 'rgb(244, 177, 79)'},
-            config: {
-                mass: 1,
-                friction: 10,
-                duration: 7200
-            }
-    })
-    const gradient2 = useSpring({
-            loop: {reverse: true},
-            from: {stopColor: colorEnd || 'rgb(244, 177, 79)'},
-            to: {stopColor: colorStart || 'rgb(169, 91, 234)'},
-            config: {
-                mass: 1,
-                friction: 10,
-                duration: 7200
-            }
+    const gradientMove = useSpring({
+        loop: true,
+        from: {gradientTransform: 'rotate(0 0.5 0.5)'},
+        to: {gradientTransform: 'rotate(360 0.5 0.5)'},
+        config: {
+            duration: 1000*15,
+        }
     })
     
 return (
-    <linearGradient id="gradient">
-        <animated.stop style={gradient1} offset='10%' x1={100} y1={0} x2={0} y2={100}></animated.stop>
-        <animated.stop style={gradient2} offset='90%' x1={0} y1={100} x2={100} y2={0}></animated.stop>
-    </linearGradient>
+    <animated.linearGradient id="gradient" {...gradientMove}>
+        <stop style={{stopColor: 'rgb(244, 177, 79)'}} offset='10%'  />
+        <stop style={{stopColor: 'rgb(169, 91, 234)'}} offset='90%' />
+    </animated.linearGradient>
 )
 }
 
 export function ArtRectangles(props: Colors) {
 
     const style = {
-        stroke: 'url(#gradient)' || 'rgb(127,0,255)',
+        stroke: 'url(#gradient)',
         strokeWidth: 10,
         fill: 'none',
         strokeDashoffset: 0,
