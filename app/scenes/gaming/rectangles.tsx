@@ -18,8 +18,8 @@ function GradientShift(colorStart: string, colorEnd: string) {
     
 return (
     <animated.linearGradient id="gradient" {...gradientMove}>
-        <stop style={{stopColor: 'rgb(244, 177, 79)'}} offset='10%'  />
-        <stop style={{stopColor: 'rgb(169, 91, 234)'}} offset='90%' />
+        <stop style={{stopColor: colorStart || 'rgb(244, 177, 79)'}} offset='10%'  />
+        <stop style={{stopColor: colorEnd || 'rgb(169, 91, 234)'}} offset='90%' />
     </animated.linearGradient>
 )
 }
