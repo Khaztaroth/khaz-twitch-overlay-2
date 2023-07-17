@@ -19,8 +19,8 @@ function GradientShift() {
 
 console.log(params)
 
-const colorA = params.get('colorStart') || ''
-const colorB = params.get('colorEnd') || ''
+const colorA = params?.get('colorStart') || ''
+const colorB = params?.get('colorEnd') || ''
 
 return (
     <animated.linearGradient id="gradient" {...gradientMove}>
