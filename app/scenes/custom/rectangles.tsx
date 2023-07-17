@@ -16,11 +16,16 @@ function GradientShift() {
             duration: 1000*15,
         }
     })
-    
+
+console.log(params)
+
+const colorA = params.get('colorStart') || ''
+const colorB = params.get('colorEnd') || ''
+
 return (
     <animated.linearGradient id="gradient" {...gradientMove}>
-        <stop style={{stopColor: params?.get('colorStart') || 'rgb(0,0,0)'}} offset='10%'  />
-        <stop style={{stopColor: params?.get('colorEnd') || 'rgb(150,150,150)'}} offset='90%' />
+        <stop style={{stopColor: params? colorA : 'black'}} offset='10%'  />
+        <stop style={{stopColor: params? colorB : 'grey'}} offset='90%' />
     </animated.linearGradient>
 )
 }
