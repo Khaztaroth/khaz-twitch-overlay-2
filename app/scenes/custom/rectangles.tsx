@@ -19,8 +19,8 @@ function GradientShift() {
     
 return (
     <animated.linearGradient id="gradient" {...gradientMove}>
-        <stop style={{stopColor: params.get('colorStart') || 'rgb(0,0,0)'}} offset='10%'  />
-        <stop style={{stopColor: params.get('colorEnd') || 'rgb(150,150,150)'}} offset='90%' />
+        <stop style={{stopColor: params?.get('colorStart') || 'rgb(0,0,0)'}} offset='10%'  />
+        <stop style={{stopColor: params?.get('colorEnd') || 'rgb(150,150,150)'}} offset='90%' />
     </animated.linearGradient>
 )
 }
@@ -36,7 +36,7 @@ export function CustomRectangles() {
         opacity: 1,
     }
 
-const customPath = params.get('path')
+const customPath = params?.get('path')
 
 return (
     <svg  version="1.1" width="1920" height="1080" viewBox="0 0 1920 1080" xmlSpace="preserve">
