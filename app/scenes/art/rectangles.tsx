@@ -36,7 +36,7 @@ export function ArtRectangles(props: Colors) {
     }
 
 return (
-    <svg  version="1.1" width="1920" height="1080" viewBox="0 0 1920 1080" xmlSpace="preserve">
+    <svg  version="1.1" width="1920" height="1080" viewBox="0 0 1920 1080" xmlSpace="preserve" className="drop-shadow-xl blur-[0.5px]">
     <desc>overlay boxes</desc>
     <defs>
         {GradientShift(props.colorstart, props.colorend)}
